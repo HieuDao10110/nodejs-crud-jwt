@@ -13,6 +13,9 @@ router.get('/', function(req, res, next) {
 /* LOGIN . */
 router.post('/login', guest.login);
 
+/* Register . */
+router.post('/signup', guest.register);
+
 /* Get new token when jwt expired . */
 router.post('/token', guest.token)
 

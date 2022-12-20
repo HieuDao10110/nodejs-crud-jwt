@@ -62,3 +62,20 @@ exports.token = (req, res) => {
         res.status(404).send('Invalid request')
     }
 }
+
+exports.register = async (req, res) => {
+    const {username, password} = req.body;
+    if(!username || !password){
+        return res.json({status: 'failed', elements: 'Username or password is null!!!'});
+    }
+
+    var checkUser = await user.findByUsername(username);
+    var un = checkUser.username;
+
+    if(un !== null){
+        return res.json({status: 'failed', elements: 'Username is existed !!!'});
+    }else{
+        user.create(req, res);
+        return res.json({status: 'success', elements: 'Sign Up Success!!!'});
+    }
+}
