@@ -4,16 +4,13 @@ const User = db.users;
 // Create and Save a new User
 exports.create = (req, res) => {
     // Validate request
-    if (!req.body.userName) {
-        res.status(400).send({
-            message: "Username can not be empty!"
-        });
-        return;
+    if (!req.body.username) {
+        return {message: "Username can not be empty!"};
     }
 
     // Create a User
     const user = {
-        userName: req.body.userName,
+        userName: req.body.username,
         password: req.body.password,
         phoneNumber: req.body.phoneNumber
     };
@@ -22,12 +19,10 @@ exports.create = (req, res) => {
     User.create(user)
         .then(data => {
             res.send(data);
+            return {message: err.message || "Sign up success."}
         })
         .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while creating the User."
-            });
+            return {message: err.message || "Some error occurred while creating the User."}
         });
 };
 
@@ -71,17 +66,21 @@ exports.findOne = (req, res) => {
 exports.findByUsername = async function(user) {
     var usernameA = null;
     var passwordA = null;
+    var userIdA = null;
     await User.findOne({where : {userName : user}})
         .then(data => {
             if (data) {
                 usernameA = data.userName;
                 passwordA = data.password;
+                userIdA = data.userID;
             } else {
                 console.log({
                     message: `Cannot find User with username=${user}.`
                 });
                 usernameA = null;
                 passwordA = null;
+                userIdA = null;
+
             }
         })
         .catch(err => {
@@ -89,7 +88,7 @@ exports.findByUsername = async function(user) {
                 message: "Error retrieving User with id=" + id
             });
         });
-    return {username: usernameA, password: passwordA}
+    return {username: usernameA, password: passwordA, userId: userIdA}
 };
 
 // Update a User by the id in the request

@@ -1,7 +1,6 @@
 const jwt_decode = require("jwt-decode");
 const jwt = require("jsonwebtoken");
 const _CONF = require("../config");
-
 const user = require("./userController.js");
 
 var refreshTokens = {} ;// tao mot object chua nhung refreshTokens
@@ -15,12 +14,11 @@ exports.login = async (req, res) => {
     var checkUser = await user.findByUsername(username);
     var un = checkUser.username;
     var pw = checkUser.password;
-
-
+    var uid = checkUser.userId;
 
     if(username === un && password === pw && un != null && pw != null){
         let user = {
-            username: un,
+            id: uid,
             role: "user"
         }
         const token = jwt.sign(user, _CONF.SECRET, {expiresIn: _CONF.tokenLife});//20 giay
@@ -44,11 +42,13 @@ exports.token = (req, res) => {
     const {refreshToken} = req.body
 
     // if refresh token exists
+    // (xac thuc refresh token bang cach kiem tra xem refresh token co trong list refreshTokens hay khong)
+    // hoac dung cache de luu tru refresh token, nhung refresh token het han se tu dong xoa khoi cache
     if(refreshToken && (refreshToken in refreshTokens)) {
         var decoded = jwt_decode(refreshToken);
         console.log(decoded);
         const user = {
-            username: decoded.username,
+            id: decoded.id,
             role: "user"
         }
         const token = jwt.sign(user, _CONF.SECRET, { expiresIn: _CONF.tokenLife})
@@ -75,7 +75,7 @@ exports.register = async (req, res) => {
     if(un !== null){
         return res.json({status: 'failed', elements: 'Username is existed !!!'});
     }else{
-        user.create(req, res);
-        return res.json({status: 'success', elements: 'Sign Up Success!!!'});
+        var result = user.create(req, res);
+        return res.json({elements: result});
     }
 }

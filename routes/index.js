@@ -1,9 +1,8 @@
 var express = require('express');
 var router = express.Router();
+var checkLogin = require('../middleware/loginValidate.js');
 
 const guest = require('../controllers/guestController.js');
-
-var refreshTokens = {} ;// tao mot object chua nhung refreshTokens
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -11,10 +10,10 @@ router.get('/', function(req, res, next) {
 });
 
 /* LOGIN . */
-router.post('/login', guest.login);
+router.post('/login', checkLogin , guest.login);
 
 /* Register . */
-router.post('/signup', guest.register);
+router.post('/signup', checkLogin , guest.register);
 
 /* Get new token when jwt expired . */
 router.post('/token', guest.token)
