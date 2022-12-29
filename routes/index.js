@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var checkLogin = require('../middleware/loginValidate.js');
+var validate = require('../middleware/guestValidate.js');
 
 const guest = require('../controllers/guestController.js');
 
@@ -10,10 +10,10 @@ router.get('/', function(req, res, next) {
 });
 
 /* LOGIN . */
-router.post('/login', checkLogin , guest.login);
+router.post('/login', validate.loginValidateRegister , validate.validateLogin , guest.login);
 
 /* Register . */
-router.post('/signup', checkLogin , guest.register);
+router.post('/signup', validate.signupValidateRegister , validate.validateSignup , guest.register);
 
 /* Get new token when jwt expired . */
 router.post('/token', guest.token)

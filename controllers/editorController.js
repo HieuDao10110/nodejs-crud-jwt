@@ -1,9 +1,8 @@
 const userService = require("../services/userRepoService")
 const userDto = require("../dto/resDto/userDto");
-const jwt_decode = require("jwt-decode");
 const Role = require("../enums/roles")
-const bcrypt = require('bcrypt')
-
+const jwt_decode = require("jwt-decode");
+const bcrypt = require("bcrypt");
 
 // Retrieve all User from the database.
 exports.findAll = async (req, res) => {
@@ -13,6 +12,7 @@ exports.findAll = async (req, res) => {
 
     try {
         var result = await userService.findAllByRole(page, quantity, Role.USER);
+
         if(result === null){
             return res.status(200).json(result);
         }else{
@@ -35,8 +35,21 @@ exports.findAll = async (req, res) => {
 exports.findOne = async (req, res) => {
 
     const id = req.params.id;
+
+    const token = req.body.token || req.query.token || req.headers['x-access-token']
+
+    var decoded = jwt_decode(token);
+
+    const idToken = decoded.id;
     try {
-        var result = await userService.findOne(id, Role.USER);
+
+        var result;
+
+        if(!(id==idToken)){
+            result = await userService.findOne(id, Role.USER);
+        }else {
+            result = await userService.findOne(id, Role.EDITOR);
+        }
         if(result === null){
             return res.status(200).json(result);
         }else{
@@ -55,16 +68,21 @@ exports.update = async (req, res) => {
 
     var decoded = jwt_decode(token);
 
-    const id = decoded.id;
-    const {password, phoneNumber} = req.body;
+    const idToken = decoded.id;
+
+    const {id, password, phoneNumber} = req.body;
 
     var hashPass = await bcrypt.hashSync(password, 5);
 
     try{
-        var result = await userService.update(id, {password: hashPass, phoneNumber: phoneNumber}, Role.USER);
+        var result;
+        if(!(id==idToken)){
+            result = await userService.update(id, {password: hashPass, phoneNumber: phoneNumber}, Role.USER);
+        }else {
+            result = await userService.update(id, {password: hashPass, phoneNumber: phoneNumber}, Role.EDITOR);
+        }
         return res.json({code: 'success', message: `${result} user updated!!!`});
     } catch (e) {
         return res.json({code: 'failed', message: 'Update user failed !!!'});
     }
 };
-

@@ -1,9 +1,13 @@
 const express = require("express");
 const db = require("./models");
 const bodyParser = require('body-parser')
+const simpleData = require('./node/simpleData')
 
 var indexRouter = require('./routes/index.js');
-var usersRouter = require('./routes/userDetailRoutes.js');
+var userRouter = require('./routes/userRoutes.js');
+var editorRouter = require('./routes/editorRoutes.js');
+var managerRouter = require('./routes/managerRoutes.js');
+var adminRouter = require('./routes/adminRoutes.js');
 
 const app = express();
 
@@ -13,15 +17,29 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/user', userRouter);
+app.use('/editor', editorRouter);
+app.use('/manager', managerRouter);
+app.use('/admin', adminRouter);
 
-db.sequelize.sync()
-    .then(() => {
-        console.log("Synced db.");
-    })
-    .catch((err) => {
-        console.log("Failed to sync db: " + err.message);
-    });
+
+asyncDatabase = async (createData) => {
+
+    await db.sequelize.sync()
+        .then(() => {
+            console.log("Synced db.");
+        })
+        .catch((err) => {
+            console.log("Failed to sync db: " + err.message);
+        });
+
+    //tao data mau
+    if(createData){
+        await simpleData();
+    }
+
+}
+asyncDatabase(false);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

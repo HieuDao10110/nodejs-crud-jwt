@@ -1,24 +1,17 @@
 const {DataTypes} = require("sequelize");
-
 module.exports = (sequelize) => {
-    const User = sequelize.define("users", {
+    const Privilege = sequelize.define("Privilege", {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true
         },
-        username: {
+        name: {
             type: DataTypes.STRING,
             unique: true,
             allowNull: false
-        },
-        password: {
-            type: DataTypes.STRING
-        },
-        phoneNumber: {
-            type: DataTypes.STRING
-        },
+        }
     });
 
-    return User;
+    return Privilege;
 };
