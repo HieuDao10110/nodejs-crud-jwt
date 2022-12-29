@@ -2,6 +2,8 @@
 
 Build some APIs using nodejs, mysql.
 
+Authorization, authentication using jwt with role.
+
 Requirements
 - Node
 - Mysql
