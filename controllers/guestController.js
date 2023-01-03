@@ -5,15 +5,26 @@ const userService = require("../services/userRepoService")
 const Role = require("../enums/roles")
 const bcrypt = require('bcrypt')
 
+
+
 var signupDto = require("../dto/reqDto/signupDto")
+const exception = require("../exception/customException");
+const logger = require("../config/logger");
 
 var refreshTokens = {} ;// tao mot object chua nhung refreshTokens
 
 exports.login = async (req, res) => {
+
     var {username, password} = req.body;
     username = username.toLowerCase();
 
-    var checkUser = await userService.findByUsername(username);
+    try{
+
+        var checkUser = await userService.findByUsername(username);
+    }catch (e){
+        return res.json({code: 'failed', message: 'login failed !!!'});
+    }
+
     var un = checkUser.username;
     var pw = checkUser.password;
     var uid = checkUser.id;
@@ -66,6 +77,7 @@ exports.token = (req, res) => {
 }
 
 exports.register = async (req, res) => {
+
     const {username, password} = req.body;
 
     var hashPass = await bcrypt.hashSync(password, 5);
