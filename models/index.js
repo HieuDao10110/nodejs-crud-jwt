@@ -1,5 +1,4 @@
 const dbConfig = require("../config/sequelizeConfig.js");
-
 const Sequelize = require("sequelize");
 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
@@ -29,5 +28,7 @@ db.privilege.belongsToMany(db.role, { through: 'RolePrivilege' });
 
 db.role.hasMany(db.users);
 db.users.belongsTo(db.role);
+
+db.env = dbConfig;
 
 module.exports = db;

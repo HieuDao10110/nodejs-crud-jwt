@@ -15,6 +15,8 @@ var refreshTokens = {} ;// tao mot object chua nhung refreshTokens
 
 exports.login = async (req, res) => {
 
+    logger.error("bbbbbbb")
+
     var {username, password} = req.body;
     username = username.toLowerCase();
 
@@ -77,6 +79,7 @@ exports.token = (req, res) => {
 }
 
 exports.register = async (req, res) => {
+    throw new Error("aaaa");
 
     const {username, password} = req.body;
 
