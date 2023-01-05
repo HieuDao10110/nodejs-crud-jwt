@@ -2,8 +2,6 @@ const express = require("express");
 const db = require("./models");
 const bodyParser = require('body-parser')
 const simpleData = require('./node/simpleData')
-const logger = require('./config/logger')
-const { createLogger, transports } = require('winston');
 
 var indexRouter = require('./routes/index.js');
 var userRouter = require('./routes/userRoutes.js');

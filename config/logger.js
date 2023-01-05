@@ -39,13 +39,17 @@ const logger = createLogger({
             json: true,
         }),//5MB
         // new winston.transports.File({ filename: 'combined.log' }),
-        new transports.Console()
+        new transports.Console({
+            handleExceptions: true
+        })
     ],
     exitOnError: false,
     exceptionHandlers: [
         new transports.File({ filename: 'log/exception.log'})
-    ]
+    ],
+    rejectionHandlers: [
+        new transports.File({ filename: 'log/rejections.log'})
+    ],
 });
 
 module.exports = logger;
-
