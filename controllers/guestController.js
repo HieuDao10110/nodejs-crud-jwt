@@ -15,16 +15,17 @@ var refreshTokens = {} ;// tao mot object chua nhung refreshTokens
 
 exports.login = async (req, res) => {
 
-    logger.error("bbbbbbb")
-
     var {username, password} = req.body;
     username = username.toLowerCase();
 
     try{
-
         var checkUser = await userService.findByUsername(username);
     }catch (e){
         return res.json({code: 'failed', message: 'login failed !!!'});
+    }
+
+    if(checkUser == null){
+        return res.json({code: 'failed', message: 'invalid username !!!'});
     }
 
     var un = checkUser.username;
@@ -79,7 +80,6 @@ exports.token = (req, res) => {
 }
 
 exports.register = async (req, res) => {
-    throw new Error("aaaa");
 
     const {username, password} = req.body;
 
