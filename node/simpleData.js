@@ -87,7 +87,7 @@ module.exports = async ()=>{
     //tao account admin
     var pass = "Lumi1234"
     var hashPass;
-    bcrypt.hash(pass, 5, function(err, hash) {
+    bcrypt.hashSync(pass, 5, function(err, hash) {
         hashPass = hash;
     });
 

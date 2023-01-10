@@ -4,14 +4,11 @@ const _CONF = require("../config");
 const userService = require("../services/userRepoService")
 const Role = require("../enums/roles")
 const bcrypt = require('bcrypt')
-
-
-
 var signupDto = require("../dto/reqDto/signupDto")
-const exception = require("../exception/customException");
-const logger = require("../config/logger");
 
-var refreshTokens = {} ;// tao mot object chua nhung refreshTokens
+// tao mot object chua nhung refreshTokens
+// TODO: using redis cache in future
+var refreshTokens = {} ;
 
 exports.login = async (req, res) => {
 
@@ -68,14 +65,21 @@ exports.token = (req, res) => {
             id: decoded.id,
         }
         const token = jwt.sign(user, _CONF.SECRET, { expiresIn: _CONF.tokenLife})
+        const newRefreshToken = jwt.sign(user, _CONF.SECRET_REFRESH, {expiresIn: _CONF.refreshTokenLife});
+
         const response = {
+            "status": "Logged in",
             "token": token,
+            "refreshToken": newRefreshToken
         }
+
         // update the token in the list
-        refreshTokens[refreshToken].token = token
+        refreshTokens[newRefreshToken] = response;
+        delete refreshTokens[refreshToken];
+
         res.status(200).json(response);
     } else {
-        res.status(404).send('Invalid request')
+        res.status(400).send('Invalid refresh token')
     }
 }
 

@@ -13,15 +13,8 @@ const createValidateRegister = [
     body("phoneNumber").exists()
 ];
 
-var createValidate = (req, res, next)=>{
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-    next();
-}
-
 const updateValidateRegister = [
+    body("id").notEmpty().isInt({min: 1}),
     // /^
     // (?=.*\d)          // should contain at least one digit
     // (?=.*[a-z])       // should contain at least one lower case
@@ -32,32 +25,20 @@ const updateValidateRegister = [
     body("phoneNumber").exists()
 ];
 
-var updateValidate = (req, res, next)=>{
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-    next();
-}
-
 const getOneValidateRegister = [
     param("id").isInt({min:1})
 ];
-
-var getOneValidate = (req, res, next)=>{
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-    next();
-}
 
 const getAllValidateRegister = [
     query("page").isInt({min:1}),
     query("quantity").isInt({min:1, max:10})
 ];
 
-var getAllValidate = (req, res, next)=>{
+const deleteValidateRegister = [
+    param("id").isInt({min:1})
+];
+
+var validate = (req, res, next)=>{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -66,12 +47,10 @@ var getAllValidate = (req, res, next)=>{
 }
 
 module.exports = {
+    deleteValidateRegister : deleteValidateRegister,
     createValidateRegister : createValidateRegister,
-    createValidate : createValidate,
     updateValidateRegister: updateValidateRegister,
-    updateValidate : updateValidate,
     getOneValidateRegister : getOneValidateRegister,
-    getOneValidate : getOneValidate,
     getAllValidateRegister : getAllValidateRegister,
-    getAllValidate : getAllValidate
+    validate : validate
 }

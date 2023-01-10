@@ -16,6 +16,6 @@ router.post('/login', validate.loginValidateRegister , validate.validateLogin , 
 router.post('/signup', validate.signupValidateRegister , validate.validateSignup , guest.register);
 
 /* Get new token when jwt expired . */
-router.post('/token', guest.token)
+router.post('/refreshToken', guest.token);
 
 module.exports = router;
