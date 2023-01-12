@@ -60,64 +60,122 @@ module.exports = async ()=>{
             Logger.error('Create simple Role fail')
         });
 
-        const adminRole = await Role.findByPk(1);
-        const adminPrivilege = await Privilege.findAll({
-            where: {
-                id: [1, 2, 3, 4]
+
+        await Role.findByPk(1).then(async (adminRole) => {
+            if(!adminRole){
+                console.log("role1 not found");
+                return null;
             }
+            await Privilege.findAll({
+                where: {
+                    id: [1, 2, 3, 4]
+                }
+            }).then((adminPrivilege) => {
+                if(!adminPrivilege){
+                    console.log("privilege1 not found");
+                    return null;
+                }
+
+                try {
+                    adminRole.addPrivilege(adminPrivilege);
+                    console.log('>> added adminRole success');
+                    return true;
+                }catch (e){
+                    console.log(e);
+                }
+            }).catch((e) => {
+                console.log(e);
+            });
+        }).catch((e) => {
+            console.log(e);
         });
 
-//TODO: check code below. validation error
-        adminRole.addPrivilege(adminPrivilege, {foreignKey:{unique: false}}).then(function (a){
-            console.log("ADMIN added Privilege")
-        }).catch(function (e){
-            console.log('ADMIN add Privilege fail')
-            Logger.error(e)
-        });
-
-        const managerRole = await Role.findByPk(2);
-        const managerPrivilege = await Privilege.findAll({
-            where: {
-                id: [1, 2, 3, 4]
+        await Role.findByPk(2).then(async (managerRole) => {
+            if(!managerRole){
+                console.log("role2 not found");
+                return null;
             }
-        });
-        //TODO: check code below
-        managerRole.addPrivilege(managerPrivilege, {foreignKey:{unique: false}}).then(function (a){
-            console.log("MANAGER added Privilege")
-        }).catch(function (e){
-            console.log('MANAGER add Privilege fail')
-            Logger.error(e)
+            await Privilege.findAll({
+                where: {
+                    id: [1, 2, 3, 4]
+                }
+            }).then((managerPrivilege) => {
+                if(!managerPrivilege){
+                    console.log("privilege2 not found");
+                    return null;
+                }
+
+                try {
+                    managerRole.addPrivilege(managerPrivilege);
+                    console.log('>> added managerRole success');
+                    return true;
+                }catch (e){
+                    console.log(e);
+                }
+            }).catch((e) => {
+                console.log(e);
+            });
+        }).catch((e) => {
+            console.log(e);
         });
 
-        const editorRole = await Role.findByPk(2);
-        const editorPrivilege = await Privilege.findAll({
-            where: {
-                id: [1, 2, 3]
+        await Role.findByPk(3).then(async (editorRole) => {
+            if(!editorRole){
+                console.log("role3 not found");
+                return null;
             }
-        });
-        //TODO: check code below
-        editorRole.addPrivilege(editorPrivilege, {foreignKey:{unique: false}}).then(function (a){
-            console.log("EDITOR added Privilege")
-        }).catch(function (e){
-            console.log('EDITOR add Privilege fail')
-            Logger.error(e)
+            await Privilege.findAll({
+                where: {
+                    id: [2, 3]
+                }
+            }).then((editorPrivilege) => {
+                if(!editorPrivilege){
+                    console.log("privilege3 not found");
+                    return null;
+                }
+
+                try {
+                    editorRole.addPrivilege(editorPrivilege);
+                    console.log('>> added editorRole success');
+                    return true;
+                }catch (e){
+                    console.log(e);
+                }
+            }).catch((e) => {
+                console.log(e);
+            });
+        }).catch((e) => {
+            console.log(e);
         });
 
-        const userRole = await Role.findByPk(2);
-        const userPrivilege = await Privilege.findAll({
-            where: {
-                id: [1, 2, 3]
+        await Role.findByPk(4).then(async (userRole) => {
+            if(!userRole){
+                console.log("role4 not found");
+                return null;
             }
-        });
-        //TODO: check code below
-        userRole.addPrivilege(userPrivilege, {foreignKey:{unique: false}}).then(function (a){
-            console.log("USER added Privilege")
-        }).catch(function (e){
-            console.log('USER add Privilege fail')
-            Logger.error(e)
-        });
+            await Privilege.findAll({
+                where: {
+                    id: [2, 3]
+                }
+            }).then((userPrivilege) => {
+                if(!userPrivilege){
+                    console.log("privilege4 not found");
+                    return null;
+                }
 
-
+                try {
+                    userRole.addPrivilege(userPrivilege);
+                    console.log('>> added userRole success');
+                    return true;
+                }catch (e){
+                    console.log(e);
+                }
+            }).catch((e) => {
+                console.log(e);
+            });
+        }).catch((e) => {
+            console.log(e);
+        });
 
         //tao account admin
         var pass = "Lumi1234"
@@ -146,7 +204,6 @@ module.exports = async ()=>{
             Logger.error('Create simple User2 fail')
         });
 
-
         //tao account editor
         await Users.create({
             id: 3,
@@ -159,7 +216,6 @@ module.exports = async ()=>{
             Logger.error('Create simple User3 fail')
         });
 
-
         //tao account  user
         await Users.create({
             id: 4,
@@ -171,7 +227,6 @@ module.exports = async ()=>{
         }).catch(function (e){
             Logger.error('Create simple User4 fail')
         });
-
 
         // var a = await Users.findByPk(1, {include: Role});
         // console.log(a.role.name);
