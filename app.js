@@ -35,6 +35,7 @@ asyncDatabase = async (createData) => {
             console.log("Failed to sync db: " + err.message);
         });
 
+    console.log("-----------------------------------------------------------------------------")
     //tao data mau
     if(createData){
         await simpleData();
